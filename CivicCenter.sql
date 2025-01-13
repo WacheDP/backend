@@ -9,7 +9,6 @@ CREATE TABLE "employees" (
   "surname" varchar(15),
   "address" varchar(100) NOT NULL,
   "phone" varchar(20),
-  "birth_place" varchar(50),
   "birth_date" date NOT NULL,
   "start_date" date NOT NULL,
   "nationality" varchar(20) NOT NULL,

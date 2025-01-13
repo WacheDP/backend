@@ -2,12 +2,12 @@ import { pool } from "../database.js"
 
 export const createemployee = async (req, res) => {
     try {
-        const { ci, rif, first_name, middle_name, last_name, surname, address, phone, birth_place } = req.body
+        const { ci, rif, first_name, middle_name, last_name, surname, address, phone } = req.body
         const { birth_date, start_date, nationality, blood_type, allergies, department, photo } = req.body
 
         const { rows } = await pool.query(
-            "insert into employees(ci, rif, first_name, middle_name, last_name, surname, address, phone, birth_place, birth_date, start_date, nationality, blood_type, allergies, department, photo) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *",
-            [ci, rif, first_name, middle_name, last_name, surname, address, phone, birth_place, birth_date, start_date, nationality, blood_type, allergies, department, photo]
+            "insert into employees(ci, rif, first_name, middle_name, last_name, surname, address, phone, birth_date, start_date, nationality, blood_type, allergies, department, photo) values ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15) RETURNING *",
+            [ci, rif, first_name, middle_name, last_name, surname, address, phone, birth_date, start_date, nationality, blood_type, allergies, department, photo]
         )
 
         res.status(201).json(rows[0])

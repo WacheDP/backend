@@ -55,3 +55,20 @@ export const deleteuser = async (req, res) => {
 
     return res.sendStatus(204);
 };
+
+export const login = async (req, res) => {
+    const { name, key, email } = req.body
+
+    const { rows } = await pool.query(
+        "select * from users where name=$1 and email=$2",
+        [name, email]
+    )
+    const { password } = rows[0]
+
+    if (key == password) {
+        res.json({ message: "Welcome!" })
+    }
+    else {
+        res.status(401).json({ message: "Incorrect Password" })
+    }
+}
