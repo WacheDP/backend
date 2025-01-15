@@ -1,6 +1,12 @@
-import { pool } from "../database.js"
+import getRoles from "../modules/roles.modules.js";
 
-export const getroles = async (req, res) => {
-    const response = await pool.query("select * from roles")
-    res.status(200).json(response.rows)
-}
+const controller = async (req, res) => {
+  try {
+    const roles = await getRoles();
+    res.json(roles);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+export default controller;

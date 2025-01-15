@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { getroles } from "../controllers/roles.controllers.js";
+import getRoles from "../controllers/roles.controllers.js";
 
-const routes = Router()
+const routes = Router();
 
-routes.get("/roles", getroles)
+routes.get("/roles", getRoles);
 
-export default routes
+export default routes;

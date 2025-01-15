@@ -1,15 +1,18 @@
 import { Router } from "express";
 import {
-    createemployee, deleteemployee, getemployee,
-    getemployees, updateemployee
+  controllerCreate,
+  controllerDelete,
+  controllerGet,
+  controllerGets,
+  controllerUpdate,
 } from "../controllers/employees.controllers.js";
 
-const routes = Router()
+const routes = Router();
 
-routes.get("/employees", getemployees)
-routes.get("/employees/:id", getemployee)
-routes.post("/employees", createemployee)
-routes.put("/employees", updateemployee)
-routes.delete("/employees/:id", deleteemployee)
+routes.get("/employees", controllerGets);
+routes.get("/employees/:id", controllerGet);
+routes.post("/employees", controllerCreate);
+routes.put("/employees/:id", controllerUpdate);
+routes.delete("/employees/:id", controllerDelete);
 
-export default routes
+export default routes;

@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE "employees" (
-  "id" varchar(32) PRIMARY KEY DEFAULT REPLACE(uuid_generate_v4()::text, "-", ""),
+  "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
   "ci" varchar(15) UNIQUE NOT NULL,
   "rif" varchar(15) UNIQUE NOT NULL,
   "first_name" varchar(15) NOT NULL,
@@ -16,12 +16,12 @@ CREATE TABLE "employees" (
   "allergies" varchar(50) NOT NULL,
   "department" varchar(20) NOT NULL,
   "photo" varchar(50) NOT NULL,
-  "status" varchar(15) NOT NULL DEFAULT "To verified",
+  "status" varchar(15) NOT NULL DEFAULT 'To verified',
   "create_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE "information" (
-  "id" varchar(32) PRIMARY KEY DEFAULT REPLACE(uuid_generate_v4()::text, "-", ""),
+  "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
   "dir" varchar(100) NOT NULL,
   "phone" varchar(20),
   "email" varchar(100)
@@ -32,7 +32,7 @@ CREATE TABLE "exchangerates" (
   "rate" float NOT NULL
 );
 CREATE TABLE "vacations" (
-  "id" varchar(32) PRIMARY KEY DEFAULT REPLACE(uuid_generate_v4()::text, "-", ""),
+  "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
   "employee" varchar(15) NOT NULL,
   "rate" varchar(32) NOT NULL,
   "today" date NOT NULL,
@@ -41,12 +41,12 @@ CREATE TABLE "vacations" (
   "gross_pay" float NOT NULL,
   "total_deduction" float NOT NULL,
   "net_pay" float NOT NULL,
-  "status" varchar(15) NOT NULL DEFAULT "To Pay",
+  "status" varchar(15) NOT NULL DEFAULT 'To Pay',
   "create_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE "det_vac_grosspay" (
-  "id" varchar(32) PRIMARY KEY DEFAULT REPLACE(uuid_generate_v4()::text, "-", ""),
+  "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
   "vacation" varchar(32) NOT NULL,
   "item" varchar(50) NOT NULL,
   "days" integer NOT NULL,
@@ -54,41 +54,41 @@ CREATE TABLE "det_vac_grosspay" (
   "total" float NOT NULL
 );
 CREATE TABLE "det_vac_deduction" (
-  "id" varchar(32) PRIMARY KEY DEFAULT REPLACE(uuid_generate_v4()::text, "-", ""),
+  "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
   "vacation" varchar(32) NOT NULL,
   "item" varchar(50) NOT NULL,
   "total" float NOT NULL
 );
 CREATE TABLE "users" (
-  "id" varchar(32) PRIMARY KEY DEFAULT REPLACE(uuid_generate_v4()::text, "-", ""),
+  "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" varchar(15) UNIQUE NOT NULL,
   "role" varchar(32) NOT NULL,
   "employee" varchar(15) NOT NULL,
   "password" varchar(1024) NOT NULL,
   "email" varchar(100),
-  "status" varchar(15) NOT NULL DEFAULT "To verified",
+  "status" varchar(15) NOT NULL DEFAULT 'To verified',
   "create_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE "roles" (
-  "id" varchar(32) PRIMARY KEY DEFAULT REPLACE(uuid_generate_v4()::text, "-", ""),
+  "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
   "role" varchar(20) NOT NULL,
   "permissions" JSONB NOT NULL
 );
 CREATE TABLE "loans" (
-  "id" varchar(32) PRIMARY KEY DEFAULT REPLACE(uuid_generate_v4()::text, "-", ""),
+  "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
   "rate" varchar(32) NOT NULL,
   "authorized" varchar(15) NOT NULL,
   "received" varchar(15) NOT NULL,
   "amount" float NOT NULL,
   "due_date" date NOT NULL,
   "due_to" varchar(50) NOT NULL,
-  "status" varchar(15) NOT NULL DEFAULT "To pay",
+  "status" varchar(15) NOT NULL DEFAULT 'To pay',
   "create_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE "settlements" (
-  "id" varchar(32) PRIMARY KEY DEFAULT REPLACE(uuid_generate_v4()::text, "-", ""),
+  "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
   "rate" varchar(32) NOT NULL,
   "employee" varchar(15) NOT NULL,
   "today" date NOT NULL,
@@ -104,7 +104,7 @@ CREATE TABLE "settlements" (
   "updated_at" timestamp NOT NULL
 );
 CREATE TABLE "det_settlements" (
-  "id" varchar(32) PRIMARY KEY,
+  "id" varchar(36) PRIMARY KEY,
   "settlement" varchar(32) NOT NULL,
   "item" varchar(50) NOT NULL,
   "days" integer NOT NULL,
@@ -112,7 +112,7 @@ CREATE TABLE "det_settlements" (
   "total" float NOT NULL
 );
 CREATE TABLE "benefits" (
-  "id" varchar(32) PRIMARY KEY,
+  "id" varchar(36) PRIMARY KEY,
   "rate" varchar(4) NOT NULL,
   "employee" varchar(15) NOT NULL,
   "date" date NOT NULL,
@@ -137,7 +137,7 @@ CREATE TABLE "benefits" (
   "updated_at" timestamp NOT NULL
 );
 CREATE TABLE "staff" (
-  "id" varchar(32) PRIMARY KEY,
+  "id" varchar(36) PRIMARY KEY,
   "rate" varchar(4) NOT NULL,
   "employee" varchar(15) NOT NULL,
   "days" integer NOT NULL,
@@ -163,19 +163,19 @@ CREATE TABLE "staff" (
   "updated_at" timestamp NOT NULL
 );
 CREATE TABLE "det_staff_bonus" (
-  "id" varchar(32) PRIMARY KEY,
+  "id" varchar(36) PRIMARY KEY,
   "staff" varchar(32) NOT NULL,
   "name" varchar(50) NOT NULL,
   "amount" float NOT NULL
 );
 CREATE TABLE "det_staff_taxes" (
-  "id" varchar(32) PRIMARY KEY,
+  "id" varchar(36) PRIMARY KEY,
   "staff" varchar(32) NOT NULL,
   "name" varchar(20) NOT NULL,
   "tax" float NOT NULL
 );
 CREATE TABLE "timebooks" (
-  "id" varchar(32) PRIMARY KEY,
+  "id" varchar(36) PRIMARY KEY,
   "employee" varchar(15) NOT NULL,
   "date" date NOT NULL,
   "time_in" time NOT NULL,
