@@ -4,15 +4,20 @@ import {
   controllerDelete,
   controllerGet,
   controllerGets,
+  controllerLogin,
   controllerUpdate,
+  resetPassword,
 } from "../controllers/users.controllers.js";
+import authenticateToken from "../authorization.js";
 
 const routes = Router();
 
-routes.get("/users", controllerGets);
-routes.get("/users/:id", controllerGet);
-routes.post("/users", controllerCreate);
-routes.put("/users/:id", controllerUpdate);
-routes.delete("/users/:id", controllerDelete);
+routes.post("/users/login", controllerLogin);
+routes.post("/users/reset", resetPassword);
+routes.get("/users", authenticateToken, controllerGets);
+routes.get("/users/:id", authenticateToken, controllerGet);
+routes.post("/users", authenticateToken, controllerCreate);
+routes.put("/users/:id", authenticateToken, controllerUpdate);
+routes.delete("/users/:id", authenticateToken, controllerDelete);
 
 export default routes;
