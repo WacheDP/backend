@@ -58,21 +58,12 @@ export const Login = async (datos) => {
 
 export const newPassword = async (datos) => {
   const { password, name, email } = datos;
+  const newPassword = bcrypt.hash(password, 12);
 
   const user = await pool.query(
-    "select id from users where name=$1 and email=$2",
-    [name, email]
+    "update users password=$1 where name=$3 and email=$4 returning *",
+    [newPassword, name, email]
   );
 
-  if (user.rowCount != 0) {
-    const newPassword = bcrypt.hash(password, 12);
-    const reset = await pool.query("update users password=$1 where id=$2", [
-      newPassword,
-      id,
-    ]);
-
-    return reset.rows[0];
-  } else {
-    return json({ message: "User not found" });
-  }
+  return user.rows[0];
 };
