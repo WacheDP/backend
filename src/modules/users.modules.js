@@ -1,69 +1,109 @@
-import { json } from "express";
 import { pool } from "../database.js";
 import bcrypt from "bcrypt";
 
-export const createUser = async (datos) => {
-  const { name, role, employee, password, email } = datos;
-  const hash = await bcrypt.hash(password, 12);
+export const create = async (datos) => {
+  const { name, role, employee, email } = datos;
+  const password = await bcrypt.hash(datos.password, 12);
 
   const user = await pool.query(
     "insert into users(name, role, employee, password, email) values ($1, $2, $3, $4, $5) returning *",
-    [name, role, employee, hash, email]
+    [name, role, employee, password, email]
   );
 
   return user.rows[0];
 };
 
-export const getUsers = async () => {
-  const users = await pool.query("select * from users");
+export const findAll = async () => {
+  const users = await pool.query(
+    "select id, name, role, employee, email, status, create_at, updated_at from users"
+  );
   return users.rows;
 };
 
-export const getUser = async (id) => {
-  const user = await pool.query("select * from users where id=$1", [id]);
-  return user.rows;
+export const findOne = async (id) => {
+  const user = await pool.query(
+    "select id, name, role, employee, email, status, create_at, updated_at from users where id=$1",
+    [id]
+  );
+  return user.rows[0];
 };
 
-export const updateUser = async (id, datos) => {
-  const { name, role, employee, password, email, status } = datos;
-  const hash = await bcrypt.hash(password, 12);
+const validateName = async (name) => {
+  const user = await pool.query("select * from users where name=$1", [name]);
+  return user.rowCount > 0;
+};
 
-  const user = await pool.query(
-    "update users set SET name=$1, role=$2, employee=$3, password=$4, email=$5, status=$6, updated_at=current_timestamp where id=$7",
-    [name, role, employee, hash, email, status, id]
+const validateEmail = async (email) => {
+  const user = await pool.query("select * from users where email=$1", [email]);
+  return user.rowCount > 0;
+};
+
+export const update = async (id, datos) => {
+  const user = findOne(id);
+
+  let name = user.name;
+  let email = user.email;
+
+  if (datos.name) {
+    if (await validateName(datos.name)) {
+      name = user.name;
+    } else {
+      name = datos.name;
+    }
+  }
+
+  if (datos.email) {
+    if (await validateEmail(datos.email)) {
+      email = user.email;
+    } else {
+      email = datos.email;
+    }
+  }
+
+  if (datos.password) {
+    const password = await bcrypt.hash(datos.password, 12);
+  }
+
+  const role = datos.role || user.role;
+  const status = datos.status || user.status;
+
+  const New = await pool.query(
+    "update users set name=$1, role=$2, password=$3, email=$4, status=$5, updated_at=current_timestamp where id=$6 returning *",
+    [name, role, password, email, status, id]
   );
 
   return user.rows[0];
 };
 
-export const deleteUser = async (id) => {
+export const Delete = async (id) => {
   const user = await pool.query("delete from users where id=$1", [id]);
-
-  if (user.rowCount == 0) {
-    return false;
-  } else {
-    return true;
-  }
+  return user.rowCount > 0;
 };
 
 export const Login = async (datos) => {
-  const { id } = datos;
+  const { name } = datos;
 
   const user = await pool.query(
-    "select id, name, password, email from users where (name=$1 or email=$2) and (status='To verified' or status='verified')",
-    [id, id]
+    "select id, name, role, employee, password from users where name=$1 and (status='To verified' or status='Verified')",
+    [name]
   );
+
   return user.rows[0];
 };
 
-export const newPassword = async (datos) => {
-  const { password, name, email } = datos;
-  const newPassword = bcrypt.hash(password, 12);
-
+export const Tokenon = async (id, token) => {
   const user = await pool.query(
-    "update users password=$1 where name=$3 and email=$4 returning *",
-    [newPassword, name, email]
+    "update users set token=$1 where id=$2 returning *",
+    [token, id]
   );
 
+  return user.rows[0];
+};
+
+export const Tokenoff = async (id) => {
+  const user = await pool.query(
+    "update users set token=null where id=$1 returning *",
+    [id]
+  );
   return user.rows[0];
 };

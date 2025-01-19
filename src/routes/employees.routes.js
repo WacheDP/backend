@@ -1,19 +1,19 @@
 import { Router } from "express";
 import {
-  controllerCreate,
-  controllerDelete,
-  controllerGet,
-  controllerGets,
-  controllerUpdate,
+  post,
+  employee,
+  employees,
+  updater,
+  deleter,
 } from "../controllers/employees.controllers.js";
-import authenticateToken from "../authorization.js";
+import { authenticateToken } from "../authorization.js";
 
 const routes = Router();
 
-routes.get("/employees", authenticateToken, controllerGets);
-routes.get("/employees/:id", authenticateToken, controllerGet);
-routes.post("/employees", authenticateToken, controllerCreate);
-routes.put("/employees/:id", authenticateToken, controllerUpdate);
-routes.delete("/employees/:id", authenticateToken, controllerDelete);
+routes.get("/employees", authenticateToken, employees);
+routes.get("/employees/:id", authenticateToken, employee);
+routes.post("/employees", authenticateToken, post);
+routes.put("/employees/:id", authenticateToken, updater);
+routes.delete("/employees/:id", authenticateToken, deleter);
 
 export default routes;

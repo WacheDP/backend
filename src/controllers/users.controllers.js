@@ -1,102 +1,98 @@
 import { SECURE_WORD } from "../config.js";
 import {
-  getUser,
-  getUsers,
-  createUser,
-  deleteUser,
-  updateUser,
+  findAll,
+  findOne,
+  Delete,
+  update,
+  create,
   Login,
-  newPassword,
+  Tokenon,
+  Tokenoff,
 } from "../modules/users.modules.js";
 import JWT from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
-export const controllerCreate = async (req, res) => {
+export const creater = async (req, res) => {
   try {
-    const user = await createUser(req.body);
-    res.status(201).json(user);
+    const user = await create(req.body);
+    return res.status(201).json(user);
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }
 };
 
-export const controllerGets = async (req, res) => {
+export const all = async (req, res) => {
   try {
-    const users = await getUsers();
-    res.status(200).json(users);
+    const users = await findAll();
+    return res.status(200).json(users);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
-export const controllerGet = async (req, res) => {
-  const id = req.params.id;
-
+export const one = async (req, res) => {
   try {
-    const user = await getUser(id);
-    res.json(user);
+    const user = await findOne(req.params.id);
+    return res.json(user);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
-export const controllerUpdate = async (req, res) => {
-  const id = req.params.id;
-
+export const updater = async (req, res) => {
   try {
-    const user = await updateUser(id, req.body);
-    res.json(user);
+    const user = await update(req.params.id, req.body);
+    return res.json(user);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
-export const controllerDelete = async (req, res) => {
-  const id = req.params.id;
-
+export const deleter = async (req, res) => {
   try {
-    if (deleteUser(id)) {
-      res.sendStatus(204);
+    if (Delete(req.params.id)) {
+      return res.sendStatus(204);
     } else {
-      res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
-const generateToken = (user) => {
-  const crypt = { id: user.id, name: user.name, email: user.email };
-  const setting = { expiresIn: "24h" };
+const generateToken = (id) => {
+  const crypt = { id: id };
+  const setting = { expiresIn: "1d" };
   const token = JWT.sign(crypt, SECURE_WORD, setting);
   return token;
 };
 
-export const controllerLogin = async (req, res) => {
+export const LogIn = async (req, res) => {
   const user = await Login(req.body);
   const { password } = req.body;
 
   try {
     if (user) {
       if (await bcrypt.compare(password, user.password)) {
-        const token = generateToken(user);
-        res.json({ token, user });
+        const token = generateToken(user.id);
+        await Tokenon(user.id, token);
+        return res.json({ token });
       } else {
-        res.status(401).json({ message: "Invalid credentials" });
+        return res.status(401).json({ message: "Invalid credentials" });
       }
     } else {
-      res.status(401).json({ message: "User not found" });
+      return res.status(401).json({ message: "User not found" });
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
-export const resetPassword = async (req, res) => {
+export const LogOut = async (req, res) => {
   try {
-    const newPassword = newPassword(req.body);
-    res.json(newPassword);
+    await Tokenoff(req.params.id);
+    return res.json({ message: "Successful Logout!" });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };

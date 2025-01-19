@@ -1,10 +1,14 @@
 import { Router } from "express";
-import { createinformation, getinformation, updateinformation } from "../controllers/information.controllers.js";
+import {
+  getters,
+  setting,
+  updater,
+} from "../controllers/information.controllers.js";
 
-const routes = Router()
+const routes = Router();
 
-routes.get("/information", getinformation)
-routes.post("/information", createinformation)
-routes.put("/information", updateinformation)
+routes.get("/information", getters);
+routes.post("/information", setting);
+routes.put("/information", updater);
 
-export default routes
+export default routes;

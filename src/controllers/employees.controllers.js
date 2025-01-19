@@ -1,61 +1,55 @@
 import {
-  createEmployee,
-  getEmployees,
-  getEmployee,
-  updateEmployee,
-  deleteEmployee,
+  findAll,
+  findOne,
+  Delete,
+  update,
+  create,
 } from "../modules/employees.modules.js";
 
-export const controllerCreate = async (req, res) => {
+export const post = async (req, res) => {
   try {
-    const employee = await createEmployee(req.body);
-    res.status(201).json(employee);
+    const employee = await create(req.body);
+    return res.status(201).json(employee);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
-export const controllerGets = async (req, res) => {
+export const employees = async (req, res) => {
   try {
-    const employees = await getEmployees();
-    res.status(200).json(employees);
+    const employees = await findAll();
+    return res.status(200).json(employees);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
-export const controllerGet = async (req, res) => {
-  const id = req.params.id;
-
+export const employee = async (req, res) => {
   try {
-    const employee = await getEmployee(id);
-    res.json(employee);
+    const employee = await findOne(req.params.id);
+    return res.json(employee);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
-export const controllerUpdate = async (req, res) => {
-  const id = req.params.id;
-
+export const updater = async (req, res) => {
   try {
-    const employee = await updateEmployee(id, req.body);
-    res.json(employee);
+    const employee = await update(req.params.id, req.body);
+    return res.json(employee);
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
 
-export const controllerDelete = async (req, res) => {
-  const id = req.params.id;
-
+export const deleter = async (req, res) => {
   try {
-    if (deleteEmployee(id)) {
-      res.sendStatus(204);
+    if (await Delete(req.params.id)) {
+      return res.sendStatus(204);
     } else {
-      res.status(404).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    return res.status(500).json({ error: err.message });
   }
 };
