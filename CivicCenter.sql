@@ -27,14 +27,14 @@ CREATE TABLE "information" (
   "email" varchar(100)
 );
 CREATE TABLE "exchangerates" (
-  "symbol" varchar(32) PRIMARY KEY,
-  "money" varchar(20) NOT NULL,
+  "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
+  "symbol" varchar(3) NOT NULL,
   "rate" float NOT NULL
 );
 CREATE TABLE "vacations" (
   "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
   "employee" varchar(15) NOT NULL,
-  "rate" varchar(32) NOT NULL,
+  "rate" varchar(36) NOT NULL,
   "today" date NOT NULL,
   "start" date NOT NULL,
   "end" date NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE "users" (
   "role" varchar(32) NOT NULL,
   "employee" varchar(15) NOT NULL,
   "password" varchar(1024) NOT NULL,
-  "email" varchar(100),
+  "email" varchar(100) UNIQUE NOT NULL,
   "status" varchar(15) NOT NULL DEFAULT 'To verified',
   "create_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
@@ -77,19 +77,19 @@ CREATE TABLE "roles" (
 );
 CREATE TABLE "loans" (
   "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "rate" varchar(32) NOT NULL,
-  "authorized" varchar(15) NOT NULL,
-  "received" varchar(15) NOT NULL,
+  "rate" varchar(36) NOT NULL,
+  "authorized" varchar(36),
+  "received" varchar(36) NOT NULL,
   "amount" float NOT NULL,
-  "due_date" date NOT NULL,
+  "due_date" date NOT NULL DEFAULT CURRENT_DATE,
   "due_to" varchar(50) NOT NULL,
-  "status" varchar(15) NOT NULL DEFAULT 'To pay',
+  "status" varchar(15) NOT NULL DEFAULT 'To be authorized',
   "create_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 CREATE TABLE "settlements" (
   "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "rate" varchar(32) NOT NULL,
+  "rate" varchar(36) NOT NULL,
   "employee" varchar(15) NOT NULL,
   "today" date NOT NULL,
   "monthly_salary" float NOT NULL,
@@ -175,19 +175,18 @@ CREATE TABLE "det_staff_taxes" (
   "tax" float NOT NULL
 );
 CREATE TABLE "timebooks" (
-  "id" varchar(36) PRIMARY KEY,
-  "employee" varchar(15) NOT NULL,
-  "date" date NOT NULL,
-  "time_in" time NOT NULL,
-  "time_out" time NOT NULL,
-  "status" varchar(15) NOT NULL,
-  "create_at" timestamp NOT NULL,
-  "updated_at" timestamp NOT NULL
+  "id" varchar(36) PRIMARY KEY DEFAULT DEFAULT uuid_generate_v4(),
+  "employee" varchar(36) NOT NULL,
+  "date" date NOT NULL DEFAULT CURRENT_DATE,
+  "time_in" time NOT NULL DEFAULT CURRENT_TIME,
+  "time_out" time,
+  "create_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  "updated_at" timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 ALTER TABLE "vacations"
 ADD FOREIGN KEY ("employee") REFERENCES "employees" ("id");
 ALTER TABLE "vacations"
-ADD FOREIGN KEY ("rate") REFERENCES "exchangerates" ("symbol");
+ADD FOREIGN KEY ("rate") REFERENCES "exchangerates" ("id");
 ALTER TABLE "det_vac_grosspay"
 ADD FOREIGN KEY ("vacation") REFERENCES "vacations" ("id");
 ALTER TABLE "det_vac_deduction"
@@ -201,21 +200,21 @@ ADD FOREIGN KEY ("authorized") REFERENCES "employees" ("id");
 ALTER TABLE "loans"
 ADD FOREIGN KEY ("received") REFERENCES "employees" ("id");
 ALTER TABLE "loans"
-ADD FOREIGN KEY ("rate") REFERENCES "exchangerates" ("symbol");
+ADD FOREIGN KEY ("rate") REFERENCES "exchangerates" ("id");
 ALTER TABLE "timebooks"
 ADD FOREIGN KEY ("employee") REFERENCES "employees" ("id");
 ALTER TABLE "settlements"
-ADD FOREIGN KEY ("rate") REFERENCES "exchangerates" ("symbol");
+ADD FOREIGN KEY ("rate") REFERENCES "exchangerates" ("id");
 ALTER TABLE "settlements"
 ADD FOREIGN KEY ("employee") REFERENCES "employees" ("id");
 ALTER TABLE "det_settlements"
 ADD FOREIGN KEY ("settlement") REFERENCES "settlements" ("id");
 ALTER TABLE "benefits"
-ADD FOREIGN KEY ("rate") REFERENCES "exchangerates" ("symbol");
+ADD FOREIGN KEY ("rate") REFERENCES "exchangerates" ("id");
 ALTER TABLE "benefits"
 ADD FOREIGN KEY ("employee") REFERENCES "employees" ("id");
 ALTER TABLE "staff"
-ADD FOREIGN KEY ("rate") REFERENCES "exchangerates" ("symbol");
+ADD FOREIGN KEY ("rate") REFERENCES "exchangerates" ("id");
 ALTER TABLE "staff"
 ADD FOREIGN KEY ("employee") REFERENCES "employees" ("id");
 ALTER TABLE "det_staff_bonus"

@@ -1,18 +1,19 @@
 import { Router } from "express";
 import {
-  createexchangerate,
-  deleteexchangerate,
-  getexchangerate,
-  getexchangerates,
-  updateexchangerate,
+  deleter,
+  all,
+  one,
+  updater,
+  creater,
 } from "../controllers/exchangerates.controllers.js";
+import { authenticateToken } from "../authorization.js";
 
 const routes = Router();
 
-routes.get("/exchangerates", getexchangerates);
-routes.get("/exchangerates/:id", getexchangerate);
-routes.post("/exchangerates", createexchangerate);
-routes.put("/exchangerates", updateexchangerate);
-routes.delete("/exchangerates/:id", deleteexchangerate);
+routes.get("/exchangerates", authenticateToken, all);
+routes.get("/exchangerates/:id", authenticateToken, one);
+routes.post("/exchangerates", authenticateToken, creater);
+routes.put("/exchangerates/:id", authenticateToken, updater);
+routes.delete("/exchangerates/:id", authenticateToken, deleter);
 
 export default routes;

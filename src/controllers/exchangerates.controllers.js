@@ -1,59 +1,55 @@
-import { pool } from "../database.js";
+import {
+  clean,
+  create,
+  search,
+  edit,
+  findOne,
+} from "../modules/exchangerates.modules.js";
 
-export const createexchangerate = async (req, res) => {
+export const deleter = async (req, res) => {
   try {
-    const { symbol, money, rate } = req.body;
-
-    const { rows } = await pool.query(
-      "insert into exchangerates(symbol, money, rate) values($1, $2, $3) returning *",
-      [symbol, money, rate]
-    );
-
-    res.status(201).json(rows[0]);
-  } catch (error) {
-    return res.status(500).json({ error: error.message });
+    if (await clean(req.params.id)) {
+      return res.sendStatus(204);
+    } else {
+      return res.status(404).json({ message: "User not found" });
+    }
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
 };
 
-export const getexchangerates = async (req, res) => {
-  const response = await pool.query("select * from exchangerates");
-  res.status(200).json(response.rows);
-};
-
-export const getexchangerate = async (req, res) => {
-  const id = parseInt(req.params.id);
-
-  const response = await pool.query(
-    "select * from exchangerates where id = $1",
-    [id]
-  );
-
-  res.json(response.rows);
-};
-
-export const updateexchangerate = async (req, res) => {
-  const id = parseInt(req.params.id);
-  const { money, rate } = req.body;
-
-  const { rows } = await pool.query(
-    "update exchangerates set money=$1, rate=$2 where id=$3 returning *",
-    [money, rate, id]
-  );
-
-  return res.json(rows[0]);
-};
-
-export const deleteexchangerate = async (req, res) => {
-  const id = parseInt(req.params.id);
-
-  const { rowCount } = await pool.query(
-    "delete from exchangerates where id=$1",
-    [id]
-  );
-
-  if (rowCount === 0) {
-    return res.status(404).json({ message: "User not found" });
+export const creater = async (req, res) => {
+  try {
+    const rate = await create(req.body);
+    return res.status(201).json(rate);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
   }
+};
 
-  return res.sendStatus(204);
+export const all = async (req, res) => {
+  try {
+    const rates = await search();
+    return res.status(200).json(rates);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+export const one = async (req, res) => {
+  try {
+    const rate = await findOne(req.params.id);
+    return res.json(rate);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+export const updater = async (req, res) => {
+  try {
+    const rate = await edit(req.params.id, req.body);
+    return res.json(rate);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
 };
