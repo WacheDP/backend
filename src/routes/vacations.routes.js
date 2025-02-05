@@ -1,26 +1,17 @@
 import { Router } from "express";
 import {
-    createdetvacdeduction, createdetvacgrosspay, createvacation, deletedetvacdeduction, deletedetvacgrosspay,
-    deletevacation, getdetvacdeduction, getdetvacdeductions, getdetvacgrosspay, getdetvacgrosspays, getvacation,
-    getvacations, updatedetvacdeduction, updatedetvacgrosspay, updatevacation
+  search,
+  findOne,
+  creater,
+  VACupdater,
 } from "../controllers/vacations.controllers.js";
+import { authenticateToken } from "../authorization.js";
 
-const routes = Router()
+const routes = Router();
 
-routes.get("/vacations", getvacations)
-routes.get("/vacations/:id", getvacation)
-routes.get("/vacations/grosspay", getdetvacgrosspays)
-routes.get("/vacations/grosspay/:id", getdetvacgrosspay)
-routes.get("/vacations/deductions", getdetvacdeductions)
-routes.get("/vacations/deductions/:id", getdetvacdeduction)
-routes.post("/vacations", createvacation)
-routes.post("/vacations/grosspay", createdetvacgrosspay)
-routes.post("/vacations/deductions", createdetvacdeduction)
-routes.put("/vacations", updatevacation)
-routes.put("/vacations/grosspay", updatedetvacgrosspay)
-routes.put("/vacations/deductions", updatedetvacdeduction)
-routes.delete("/vacations/:id", deletevacation)
-routes.delete("/vacations/grosspay/:id", deletedetvacgrosspay)
-routes.delete("/vacations/deductions/:id", deletedetvacdeduction)
+routes.get("/vacations", search);
+routes.get("/vacations/:id", findOne);
+routes.post("/vacations", creater);
+routes.put("/vacations/:id", VACupdater);
 
-export default routes
+export default routes;

@@ -1,6 +1,6 @@
-import Roles from "../modules/roles.modules.js";
+import { getpermiso, Roles } from "../modules/roles.modules.js";
 
-const getter = async (req, res) => {
+export const getter = async (req, res) => {
   try {
     const roles = await Roles();
     return res.json(roles);
@@ -9,4 +9,11 @@ const getter = async (req, res) => {
   }
 };
 
-export default getter;
+export const permissions = async (req, res) => {
+  try {
+    const permisos = await getpermiso(req.params.user);
+    return res.json(permisos);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};

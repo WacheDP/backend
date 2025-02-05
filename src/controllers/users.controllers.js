@@ -75,8 +75,8 @@ export const LogIn = async (req, res) => {
     if (user) {
       if (await bcrypt.compare(password, user.password)) {
         const token = generateToken(user.id);
-        await Tokenon(user.id, token);
-        return res.json({ token });
+        const { id, employee } = await Tokenon(user.id, token);
+        return res.json({ token, id, employee });
       } else {
         return res.status(401).json({ message: "Invalid credentials" });
       }

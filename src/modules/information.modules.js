@@ -2,7 +2,7 @@ import { pool } from "../database.js";
 
 export const saw = async () => {
   const info = await pool.query("select * from information");
-  return info.rows[0];
+  return info.rows;
 };
 
 export const create = async (datos) => {

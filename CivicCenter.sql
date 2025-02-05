@@ -33,9 +33,9 @@ CREATE TABLE "exchangerates" (
 );
 CREATE TABLE "vacations" (
   "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "employee" varchar(15) NOT NULL,
+  "employee" varchar(36) NOT NULL,
   "rate" varchar(36) NOT NULL,
-  "today" date NOT NULL,
+  "today" date NOT NULL DEFAULT CURRENT_DATE,
   "start" date NOT NULL,
   "end" date NOT NULL,
   "gross_pay" float NOT NULL,
@@ -47,7 +47,7 @@ CREATE TABLE "vacations" (
 );
 CREATE TABLE "det_vac_grosspay" (
   "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "vacation" varchar(32) NOT NULL,
+  "vacation" varchar(36) NOT NULL,
   "item" varchar(50) NOT NULL,
   "days" integer NOT NULL,
   "daily_rate" float NOT NULL,
@@ -55,14 +55,14 @@ CREATE TABLE "det_vac_grosspay" (
 );
 CREATE TABLE "det_vac_deduction" (
   "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
-  "vacation" varchar(32) NOT NULL,
+  "vacation" varchar(36) NOT NULL,
   "item" varchar(50) NOT NULL,
   "total" float NOT NULL
 );
 CREATE TABLE "users" (
   "id" varchar(36) PRIMARY KEY DEFAULT uuid_generate_v4(),
   "name" varchar(15) UNIQUE NOT NULL,
-  "role" varchar(32) NOT NULL,
+  "role" varchar(36) NOT NULL,
   "employee" varchar(15) NOT NULL,
   "password" varchar(1024) NOT NULL,
   "email" varchar(100) UNIQUE NOT NULL,

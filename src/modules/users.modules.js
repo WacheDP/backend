@@ -22,7 +22,7 @@ export const findAll = async () => {
 
 export const findOne = async (id) => {
   const user = await pool.query(
-    "select id, name, role, employee, email, status, create_at, updated_at from users where id=$1",
+    "select u.id, r.role, u.name, u.email, u.status, u.create_at, u.updated_at from users as u inner join roles as r on u.role=r.id where u.id=$1",
     [id]
   );
   return user.rows[0];

@@ -1,4 +1,5 @@
 import express from "express";
+import cors from "cors";
 import { PORT_SERVER } from "./config.js";
 import RolesRoutes from "./routes/roles.routes.js";
 import EmployeesRoutes from "./routes/employees.routes.js";
@@ -7,8 +8,11 @@ import InformationRoutes from "./routes/information.routes.js";
 import ExchangeratesRoutes from "./routes/exchangerates.routes.js";
 import LoansRoutes from "./routes/loans.routes.js";
 import TimebooksRoutes from "./routes/timebooks.routes.js";
+import VacationsRoutes from "./routes/vacations.routes.js";
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -20,6 +24,7 @@ app.use(InformationRoutes);
 app.use(ExchangeratesRoutes);
 app.use(LoansRoutes);
 app.use(TimebooksRoutes);
+app.use(VacationsRoutes);
 
 app.listen(PORT_SERVER);
 console.log("Servidor " + PORT_SERVER + " en linea");
